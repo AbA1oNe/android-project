@@ -31,7 +31,7 @@ def login():
         redirect(url_for('login'))
         return "wrong password"
     
-    print(f"User{current_user.usernmae} has logged in")
+    print(f"User {current_user.usernmae} has logged in")
     return redirect(next)
 
 @app.route('/logout',methods=['POST'])
