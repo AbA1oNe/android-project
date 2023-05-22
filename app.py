@@ -77,8 +77,10 @@ def receiveData():
                 fileData[username].append(data['value'])
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
-            print(f"User {current_user.username} sends {data['value']}")
-            return f"User {current_user.username} sends {data['value']}"
+            #print(f"User {current_user.username} sends {data['value']}")
+            print(f"User sends {data['value']}")
+            #return f"User {current_user.username} sends {data['value']}"
+            return f"User sends {data['value']}"
         
     return "receive failed"
     
