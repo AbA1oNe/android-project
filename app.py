@@ -23,7 +23,7 @@ def login():
         redirect(url_for('register'))
         return f"no such username {username}"
     if user.check_password(password) and user is not None:
-        session['username'] = username
+        session['user'] = username
         login_user(user, remember=True)
         next = request.args.get('next')
         if next == None or not next[0]=='/':
@@ -32,14 +32,15 @@ def login():
         redirect(url_for('login'))
         return "wrong password"
     
-    print(f"User {current_user.username} has logged in")
+    #print(f"User {current_user.username} has logged in")
+    print(f"User {session['user']} has logged in")
     return redirect(next)
 
 @app.route('/logout',methods=['POST'])
 @login_required
 def logout():
     print(f'User {current_user.username} has logged out')
-    session['username'] = None
+    session.pop('user', None)
     logout_user()
     
     return redirect(url_for('index'))
@@ -68,7 +69,7 @@ def receiveData():
     if (request.is_json):
         data = request.get_json()
         username = data['account']
-        if ('username' in session):
+        if ('user' in session):
             with open('./data.json', 'r+') as file:
                 fileData = json.load(file)
                 if (username in fileData):
@@ -81,9 +82,9 @@ def receiveData():
                     file.seek(0)
                     json.dump(fileData, file, indent=2)
                 #print(f"User {current_user.username} sends {data['value']}")
-                print(f"User sends {data['value']}")
+                print(f"User {session['user']} sends {data['value']}")
                 #return f"User {current_user.username} sends {data['value']}"
-                return f"User sends {data['value']}"
+                return f"User {session['user']} sends {data['value']}"
         
     return "receive failed"
     
