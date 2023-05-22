@@ -1,4 +1,4 @@
-from flask import request, jsonify, url_for, redirect, session
+from flask import request, jsonify, url_for, redirect
 from flask_login import login_user, logout_user, login_required
 from flask_login import current_user
 import numpy as np
@@ -31,8 +31,7 @@ def login():
         redirect(url_for('login'))
         return "wrong password"
     
-    #print(f"User {current_user.username} has logged in")
-    print(f"User {session['user']} has logged in")
+    print(f"User {current_user.username} has logged in")
     return redirect(next)
 
 @app.route('/logout',methods=['POST'])
