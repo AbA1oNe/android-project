@@ -62,9 +62,10 @@ def register():
 @app.route('/receive', methods=['POST'])
 @login_required
 def receiveData():
-    username = current_user.username
+    #username = current_user.username
     if (request.is_json):
         data = request.get_json()
+        username = data['account']
         with open('./data.json', 'r+') as file:
             fileData = json.load(file)
             if (username in fileData):
@@ -72,7 +73,8 @@ def receiveData():
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
             else:
-                fileData[username] = data['value']
+                fileData[username] = []
+                fileData[username].append(data['value'])
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
     
