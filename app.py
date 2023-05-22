@@ -60,16 +60,14 @@ def register():
 
 
 @app.route('/receive', methods=['POST'])
-@login_required
+#@login_required
 def receiveData():
     #username = current_user.username
     if (request.is_json):
         data = request.get_json()
         username = data['account']
-        print("a")
         with open('./data.json', 'r+') as file:
             fileData = json.load(file)
-            print("b")
             if (username in fileData):
                 fileData[username].append(data['value'])
                 file.seek(0)
