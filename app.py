@@ -66,8 +66,10 @@ def receiveData():
     if (request.is_json):
         data = request.get_json()
         username = data['account']
+        print("a")
         with open('./data.json', 'r+') as file:
             fileData = json.load(file)
+            print("b")
             if (username in fileData):
                 fileData[username].append(data['value'])
                 file.seek(0)
@@ -77,10 +79,10 @@ def receiveData():
                 fileData[username].append(data['value'])
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
-    
-    print(f"User {current_user.username} sends {data['value']}")
-    return f"User {current_user.username} sends {data['value']}"
-    #return redirect(url_for('index'))
+            print(f"User {current_user.username} sends {data['value']}")
+            return f"User {current_user.username} sends {data['value']}"
+        
+    return "receive failed"
     
 
 @app.route('/predict',methods=['POST'])
