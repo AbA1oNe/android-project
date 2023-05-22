@@ -79,7 +79,9 @@ def receiveData():
                 json.dump(fileData, file, indent=2)
     
     print(f"User {current_user.username} sends {data['value']}")
-    return redirect(url_for('index'))
+    return f"User {current_user.username} sends {data['value']}"
+    #return redirect(url_for('index'))
+    
 
 @app.route('/predict',methods=['POST'])
 def predict():
