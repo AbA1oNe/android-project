@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, url_for, redirect
+from flask import request, jsonify, url_for, redirect, session
 from flask_login import login_user, logout_user, login_required
 from flask_login import current_user
 import numpy as np
@@ -23,6 +23,7 @@ def login():
         redirect(url_for('register'))
         return f"no such username {username}"
     if user.check_password(password) and user is not None:
+        session['username'] = username
         login_user(user, remember=True)
         next = request.args.get('next')
         if next == None or not next[0]=='/':
@@ -38,6 +39,7 @@ def login():
 @login_required
 def logout():
     print(f'User {current_user.username} has logged out')
+    session['username'] = None
     logout_user()
     
     return redirect(url_for('index'))
@@ -60,27 +62,28 @@ def register():
 
 
 @app.route('/receive', methods=['POST'])
-#@login_required
+@login_required
 def receiveData():
     #username = current_user.username
     if (request.is_json):
         data = request.get_json()
         username = data['account']
-        with open('./data.json', 'r+') as file:
-            fileData = json.load(file)
-            if (username in fileData):
-                fileData[username].append(data['value'])
-                file.seek(0)
-                json.dump(fileData, file, indent=2)
-            else:
-                fileData[username] = []
-                fileData[username].append(data['value'])
-                file.seek(0)
-                json.dump(fileData, file, indent=2)
-            #print(f"User {current_user.username} sends {data['value']}")
-            print(f"User sends {data['value']}")
-            #return f"User {current_user.username} sends {data['value']}"
-            return f"User sends {data['value']}"
+        if ('username' in session):
+            with open('./data.json', 'r+') as file:
+                fileData = json.load(file)
+                if (username in fileData):
+                    fileData[username].append(data['value'])
+                    file.seek(0)
+                    json.dump(fileData, file, indent=2)
+                else:
+                    fileData[username] = []
+                    fileData[username].append(data['value'])
+                    file.seek(0)
+                    json.dump(fileData, file, indent=2)
+                #print(f"User {current_user.username} sends {data['value']}")
+                print(f"User sends {data['value']}")
+                #return f"User {current_user.username} sends {data['value']}"
+                return f"User sends {data['value']}"
         
     return "receive failed"
     
