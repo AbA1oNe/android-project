@@ -35,7 +35,7 @@ def login():
     return redirect(next)
 
 @app.route('/logout',methods=['POST'])
-@login_required
+#@login_required
 def logout():
     print(f'User {current_user.username} has logged out')
     logout_user()
@@ -68,6 +68,7 @@ def receiveData():
         username = data['account']
         with open('./data.json', 'r+') as file:
             fileData = json.load(file)
+            data['value']["label"] = 0
             if (username in fileData):
                 fileData[username].append(data['value'])
                 file.seek(0)
@@ -78,9 +79,9 @@ def receiveData():
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
             #print(f"User {current_user.username} sends {data['value']}")
-            print(f"User sends {data['value']}")
+            print(f"User {username} sends {data['value']}")
             #return f"User {current_user.username} sends {data['value']}"
-            return f"User sends {data['value']}"
+            return f"User {username} sends {data['value']}"
         
     return "receive failed"
     
@@ -100,4 +101,4 @@ def predict():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(host='192.168.1.103', debug=True) #or 0.0.0.0 will also work
