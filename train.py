@@ -1,7 +1,8 @@
 import pandas as pd
 import json
+import math
 
-class Train():    
+class Train():
     def transform(): #load json into dataframe
         with open('data.json', 'r') as jsonFile:
             data = json.load(jsonFile)
@@ -16,9 +17,11 @@ class Train():
                     i = 0
                     for key, value in dict.items():
                         if (key != "timestamp"):
-                            #df[key] = [value]
-                            if (key == "duration" and value < 100):
-                                print(f'duration: {value}, startX: {dict["startX"]}, startY: {dict["startY"]}, endX: {dict["endX"]}, endY: {dict["endY"]}')
+                            df[key] = [value]
+                            #if ((key == "duration" and value < 100)):
+                            #    if (math.dist([dict["startX"], dict["startY"]], [dict["endX"], dict["endY"]]) < 10.0):
+                            #        print(f'duration: {value}, startX: {dict["startX"]}, startY: {dict["startY"]}, endX: {dict["endX"]}, endY: {dict["endY"]}')
+                                    
                             
         return df
 
