@@ -16,10 +16,12 @@ class Train():
                     i = 0
                     for key, value in dict.items():
                         if (key != "timestamp"):
-                            df[key] = [value]
+                            #df[key] = [value]
+                            if (key == "duration" and value < 100):
+                                print(f'duration: {value}, startX: {dict["startX"]}, startY: {dict["startY"]}, endX: {dict["endX"]}, endY: {dict["endY"]}')
                             
         return df
 
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_rows', None)
-#data = Train.transform()
+data = Train.transform()
