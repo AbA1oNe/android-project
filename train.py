@@ -1,30 +1,51 @@
 import pandas as pd
 import json
-import math
 
-class Train():
-    def transform(): #load json into dataframe
-        with open('data.json', 'r') as jsonFile:
-            data = json.load(jsonFile)
-            df = pd.DataFrame()
+def transform(): #load json into dataframe
+    with open('data.json', 'r') as jsonFile:
+        data = json.load(jsonFile)
+        numSubject = len(data)
+        dfList = []
+        df = pd.DataFrame()
+        df1 = pd.DataFrame()
+
+        
+        for col in data[next(iter(data))][0]: #initialize the columns of the dataframe
+            if (col != "timestamp"):
+                df[col] = ""
+                df1[col] = ""
+        
+        for i in range(numSubject):           
+            for username in data:
+                for dict in data[username]:
+                    for key, value in dict.items():
+                        if (key != "timestamp"):
+                            
+                            if (list(data)[i] == username and key == "label"):
+                                df1[key] = 1
+                            else:
+                                df1[key] = [value]
+                            
+                            if (key == "sizeMedian" and df1["pressureMedian"][0] == 1):
+                                df1["pressureMedian"] = [value]
+                    df = pd.concat([df,df1])
+            dfList.append(df)
             
+            df = pd.DataFrame()
+            df1 = pd.DataFrame()
             for col in data[next(iter(data))][0]: #initialize the columns of the dataframe
                 if (col != "timestamp"):
                     df[col] = ""
-            
-            for username in data:
-                for dict in data[username]:
-                    i = 0
-                    for key, value in dict.items():
-                        if (key != "timestamp"):
-                            df[key] = [value]
-                            #if ((key == "duration" and value < 100)):
-                            #    if (math.dist([dict["startX"], dict["startY"]], [dict["endX"], dict["endY"]]) < 10.0):
-                            #        print(f'duration: {value}, startX: {dict["startX"]}, startY: {dict["startY"]}, endX: {dict["endX"]}, endY: {dict["endY"]}')
-                                    
-                            
-        return df
+                    df1[col] = ""
+                
+    return dfList
 
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_rows', None)
-data = Train.transform()
+#data = transform()
+#print(data.head(5))
+#dfList = transform()
+#print(len(dfList))
+#print(dfList[0].head(5))
+#print("-------------------")
+#print(dfList[1].head())
