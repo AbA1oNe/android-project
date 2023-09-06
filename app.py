@@ -7,7 +7,6 @@ from initiate import app, db
 from initiate.login_models import User
 import json
 
-model = pickle.load(open('model.pkl','rb'))
 
 @app.route('/')
 def index():
@@ -84,19 +83,6 @@ def receiveData():
             return f"User {username} sends {data['value']}"
         
     return "receive failed"
-    
-
-@app.route('/predict',methods=['POST'])
-def predict():
-    cgpa = request.form.get('cgpa')
-    iq = request.form.get('iq')
-    profile_score = request.form.get('profile_score')
-
-    input_query = np.array([[cgpa,iq,profile_score]], dtype=float)
-
-    result = model.predict(input_query)[0]
-
-    return jsonify({'placement':str(result)})
 
 if __name__ == '__main__':
     with app.app_context():
