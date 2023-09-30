@@ -20,7 +20,6 @@ def transform(): #load json into dataframe
                 for dict in data[username]:
                     for key, value in dict.items():
                         if (key != "timestamp"):
-                            
                             if (list(data)[i] == username and key == "label"):
                                 df1[key] = 1
                             else:

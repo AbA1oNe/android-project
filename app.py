@@ -1,11 +1,10 @@
-from flask import request, jsonify, url_for, redirect
-from flask_login import login_user, logout_user, login_required
+from flask import request, url_for, redirect, send_from_directory, make_response, send_file
+from flask_login import login_user, logout_user
 from flask_login import current_user
-import numpy as np
-import pickle
 from initiate import app, db
 from initiate.login_models import User
 import json
+import base64
 
 
 @app.route('/')
@@ -65,7 +64,7 @@ def receiveData():
     if (request.is_json):
         data = request.get_json()
         username = data['account']
-        with open('./data.json', 'r+') as file:
+        with open('./temp.json', 'r+') as file:
             fileData = json.load(file)
             data['value']["label"] = 0
             if (username in fileData):
@@ -77,14 +76,64 @@ def receiveData():
                 fileData[username].append(data['value'])
                 file.seek(0)
                 json.dump(fileData, file, indent=2)
-            #print(f"User {current_user.username} sends {data['value']}")
             print(f"User {username} sends {data['value']}")
-            #return f"User {current_user.username} sends {data['value']}"
             return f"User {username} sends {data['value']}"
         
     return "receive failed"
 
+@app.route('/send-model', methods=['POST'])
+def sendModel():
+    try:
+        username = request.form.get('username')
+        with open('data.json', 'r') as jsonFile:
+            data = json.load(jsonFile)
+            i=0
+            filename = ""
+            for user in data: 
+                if username == user:
+                    filename = f'model{i}.onnx'
+                    break
+                i+=1
+            
+            res = send_from_directory("C:\\OtherThanSystem\\Codes\\ml-app\\models", filename)
+            print(f"{filename} sends to {username}")
+            return res
+                    
+    except Exception as e:
+        print(f"send model failed {e}")
+        return f"send model failed {e}"
+    
+@app.route('/recv-evaluation', methods=['POST'])
+def receiveEvaluation():
+    username = request.form.get('account')
+    value = int(request.form.get('value'))
+    with open('./evaluationData.json', 'r+') as file:
+        fileData = json.load(file)
+
+        if (username in fileData):
+            if value == 1:
+                fileData[username]["predict_1"] += 1
+            elif value == 0:
+                fileData[username]["predict_0"] += 1
+                
+            file.seek(0)
+            json.dump(fileData, file, indent=2)
+        else:
+            fileData[username] = {"predict_0":0, "predict_1":0}
+            if value == 1:
+                fileData[username]["predict_1"] += 1
+            elif value == 0:
+                fileData[username]["predict_0"] += 1
+            
+            file.seek(0)
+            json.dump(fileData, file, indent=2)
+            
+        print(f"User {username} evaluation sends {value}")
+        return f"User {username} evaluation sends {value}"
+        
+    return "receive evaluation failed"
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='192.168.1.103', debug=True) #or 0.0.0.0 will also work
+    app.run(host='0.0.0.0', debug=True) #192.168.1.103 or 0.0.0.0 will also work
