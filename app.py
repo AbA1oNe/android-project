@@ -94,7 +94,7 @@ def sendModel():
                     filename = f'model{i}.onnx'
                     break
                 i+=1
-            
+              
             res = send_from_directory("C:\\OtherThanSystem\\Codes\\ml-app\\models", filename)
             print(f"{filename} sends to {username}")
             return res
