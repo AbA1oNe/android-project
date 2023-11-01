@@ -95,6 +95,7 @@ def sendModel():
                     break
                 i+=1
               
+            #res = send_from_directory("C:\\Users\\louis\\OneDrive\\桌面\\11\\android-project\\models", filename)
             res = send_from_directory("C:\\OtherThanSystem\\Codes\\ml-app\\models", filename)
             print(f"{filename} sends to {username}")
             return res
