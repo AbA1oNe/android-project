@@ -96,7 +96,7 @@ def sendModel():
                 i+=1
               
             #res = send_from_directory("C:\\Users\\louis\\OneDrive\\桌面\\11\\android-project\\models", filename)
-            res = send_from_directory("C:\\OtherThanSystem\\Codes\\ml-app\\models", filename)
+            res = send_from_directory("C:\\Main\\Code\\ml-app\\models", filename)
             print(f"{filename} sends to {username}")
             return res
                     
@@ -133,6 +133,40 @@ def receiveEvaluation():
         return f"User {username} evaluation sends {value}"
         
     return "receive evaluation failed"
+
+@app.route('/receiveSafty', methods=['POST'])
+#@login_required
+def receiveSafetyQuestion():
+    username = request.form.get('username')
+    quesiton1 = request.form.get('question1')
+    ans1 = request.form.get('answer1')
+    quesiton2 = request.form.get('question2')
+    ans2 = request.form.get('answer2')
+
+    with open('./safetyQuestion.json', 'r+', encoding='utf8') as file:
+        fileData = json.load(file)
+        fileData[username] = {}
+        fileData[username]["question1"] = str(quesiton1)
+        fileData[username]["answer1"] = str(ans1)
+        fileData[username]["question2"] = str(quesiton2)
+        fileData[username]["answer2"] = str(ans2)
+        file.seek(0)
+        json.dump(fileData, file, indent=2, ensure_ascii=False)
+
+        return "receive safety question"
+        
+@app.route('/sendSafty', methods=['POST'])
+#@login_required
+def sendSafetyQuestion():
+    username = request.form.get('username')
+    
+    with open('./safetyQuestion.json', 'r', encoding='utf8') as file:
+        fileData = json.load(file)
+        QAList = []
+        QAList.append({fileData[username]["question1"]: fileData[username]["answer1"]})
+        QAList.append({fileData[username]["question2"]: fileData[username]["answer2"]})
+        return QAList
+    
 
 if __name__ == '__main__':
     with app.app_context():
