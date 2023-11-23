@@ -96,7 +96,7 @@ def sendModel():
                 i+=1
               
             #res = send_from_directory("C:\\Users\\louis\\OneDrive\\桌面\\11\\android-project\\models", filename)
-            res = send_from_directory("C:\\Main\\Code\\ml-app\\models\\SMOTERF(part minmax)-newData", filename)
+            res = send_from_directory("C:\\Users\\islab\\Downloads\\1092928\\android-project-main\\android-project-main_1\\android-project-main\\models", filename)
             print(f"{filename} sends to {username}")
             return res
                     
@@ -171,6 +171,6 @@ def sendSafetyQuestion():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0',port=5000, debug=True) #192.168.1.103 or 0.0.0.0 will also work
+    app.run(host='0.0.0.0',port=80, debug=True) #192.168.1.103 or 0.0.0.0 will also work
     #port 80 in school because can't port forward 80 to 5000 port.
     #but in home it's okay to use default 5000 port because there's port forwarding.

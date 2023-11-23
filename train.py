@@ -64,7 +64,7 @@ def onlyOneUser(file, username):
 def addNewData():
     userList = ["1092954", "dama0623", "1094908", "4109034029", "611034", "1094841", "D1186959",
                 "411411159", "1094845", "1094842", "110", "pomiii5093", "1092574", "anyu5471", "px",
-                "wardlin", "lenny", "1092960", "1092923", "1092950", "1092942", "1092928", "1092922"]
+                "wardlin", "lenny", "1092960", "1092923", "1092950", "1092942", "1092928", "1092922", "29282928"]
     
     dfList = transform("data.json")
     with open("temp.json", 'r') as jsonFile:
