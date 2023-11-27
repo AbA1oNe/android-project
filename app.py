@@ -96,7 +96,7 @@ def sendModel():
                 i+=1
               
             #res = send_from_directory("C:\\Users\\louis\\OneDrive\\桌面\\11\\android-project\\models", filename)
-            res = send_from_directory("C:\\Main\\Code\\ml-app\\models\\SMOTERF(part minmax)-newData", filename)
+            res = send_from_directory("C:\\Main\\Code\\ml-app\\models\\SMOTERF-newData", filename)
             print(f"{filename} sends to {username}")
             return res
                     
