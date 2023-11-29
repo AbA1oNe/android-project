@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+from sklearn.utils import shuffle
 
 def transform(file): #load json into dataframe
     with open(file, 'r') as jsonFile:
@@ -27,6 +28,50 @@ def transform(file): #load json into dataframe
                             
                             if (key == "sizeMedian" and df1["pressureMedian"][0] == 1):
                                 df1["pressureMedian"] = [value]
+                    df = pd.concat([df,df1])
+            dfList.append(df)
+            
+            df = pd.DataFrame()
+            df1 = pd.DataFrame()
+            for col in data[next(iter(data))][0]: #initialize the columns of the dataframe
+                if (col != "timestamp"):
+                    df[col] = ""
+                    df1[col] = ""
+                
+    return dfList
+
+def transformSplit(file): #load json into dataframe
+    with open(file, 'r') as jsonFile:
+        data = json.load(jsonFile)
+        numSubject = len(data)
+        dfList = []
+        df = pd.DataFrame()
+        df1 = pd.DataFrame()
+
+        
+        for col in data[next(iter(data))][0]: #initialize the columns of the dataframe
+            if (col != "timestamp"):
+                df[col] = ""
+                df1[col] = ""
+        
+        for i in range(numSubject):
+            df3 = onlyOneUser("temp.json", list(data)[i])
+            df3 = shuffle(df3, random_state=42)
+            df3 = df3[len(df3)//2:]
+
+            for username in data:
+                if (list(data)[i] == username):
+                    df = pd.concat([df, df3])
+                    continue
+
+                for dict in data[username]:
+                    for key, value in dict.items():
+                        if (key != "timestamp"):
+                            if (list(data)[i] == username and key == "label"):
+                                df1[key] = 1
+                            else:
+                                df1[key] = [value]
+                            
                     df = pd.concat([df,df1])
             dfList.append(df)
             
@@ -80,6 +125,7 @@ def addNewData():
     
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_rows', None)
+#transformSplit("temp.json")
 #data = transform()
 #print(data.head(5))
 #dfList = transform()
