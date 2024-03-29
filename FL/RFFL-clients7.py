@@ -3,7 +3,7 @@ import numpy as np
 import flwr as fl
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
-from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTE
 from sklearn.metrics import roc_curve
 from sklearn.metrics import log_loss, accuracy_score, precision_score, recall_score, f1_score
 import warnings
@@ -73,13 +73,13 @@ class FlowerClient(fl.client.NumPyClient):
 
 
 if __name__ == "__main__":
-    client_id = 19
+    client_id = 7
     print(f"Client {client_id}:\n")
 
     # Get the dataset for local model
     X_train, y_train, X_test, y_test = RFhelper.load_dataset(client_id)
-    X_re, y_re = RandomUnderSampler(random_state=42).fit_resample(X_train, y_train.astype('int'))
-    #X_re, y_re = SMOTE(random_state=42, k_neighbors=2).fit_resample(X_train, y_train.astype('int'))
+    #X_re, y_re = RandomUnderSampler(random_state=42).fit_resample(X_train, y_train.astype('int'))
+    X_re, y_re = SMOTE(random_state=42, k_neighbors=2).fit_resample(X_train, y_train.astype('int'))
 
     # Print the label distribution
     unique, counts = np.unique(y_re, return_counts=True)

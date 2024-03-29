@@ -4,7 +4,7 @@ from typing import Dict
 
 # Define the global value for the number of clients and the training round
 NUM_CLIENTS = 23
-ROUNDS = 10
+ROUNDS = 100
 
 
 # Return the current round
